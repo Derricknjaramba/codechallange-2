@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping List</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .contain{
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .inpit{
+        display: flex;
+        margin-bottom: 10px;
+    }
+    .input-group input[type="text"] {
+        flex: 1;
+        padding: 8px;
+        font-size: 16px;
+    }
+    .input-group button {
+        padding: 8px 20px;
+        margin-left: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+    }
+    .list-container {
+        list-style-type: none;
+        padding: 0;
+    }
+    .list-item {
+        padding: 10px;
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+        border-radius: 3px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .list-item.marked {
+        text-decoration: line-through;
+        background-color: #d5d8dc;
+    }
+    .list-item button {
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+    }
+</style>
+</head>
+<body>
+
+<div class="contain">
+    <div class="inpit">
+        <input type="text" id="itemInput" placeholder="Enter item...">
+        <button onclick="addItem()">Add</button>
+    </div>
+    <ul class="list-container" id="listContainer">
+        
+    </ul>
+    <button onclick="markPurchased()">Mark Purchased</button>
+    <button onclick="clearList()">Clear List</button>
+</div>
+
+<script>
+    function addItem() {
+        var itemInput = document.getElementById('itemInput');
+        var itemName = itemInput.value.trim();
+
+        if (itemName === '') {
+            alert('Please enter an item.');
+            return;
+        }
+
+        var listContainer = document.getElementById('listContainer');
+
+        var listItem = document.createElement('li');
+        listItem.className = 'list-item';
+        listItem.innerHTML = `
+            <span>${itemName}</span>
+            <button onclick="toggleMark(this)">Mark</button>
+        `;
+
+        listContainer.appendChild(listItem);
+
+        itemInput.value = '';
+    }
+
+    function toggleMark(button) {
+        var listItem = button.parentNode;
+        listItem.classList.toggle('marked');
+    }
+
+    function markPurchased() {
+        var listItems = document.querySelectorAll('.list-item');
+        listItems.forEach(function(item) {
+            item.classList.add('marked');
+        });
+    }
+
+    function clearList() {
+        var listContainer = document.getElementById('listContainer');
+        listContainer.innerHTML = '';
+    }
+    function saveToLocalStorage() {
+        var listContainer = document.getElementById('listContainer');
+        localStorage.setItem('shoppingListItems', listContainer.innerHTML);
+    }
+
+    function addEditFunctionality() {
+        var editButtons = document.querySelectorAll('.list-item button:nth-of-type(1)');
+        editButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                editItem(this);
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
